@@ -78,6 +78,38 @@ AST.Model = ( function(config, Constructor) {
     return false;
   };
 
+  stub.getShip = () => {
+    return ship;
+  };
+
+  stub.getShots = () => {
+    return shots;
+  };
+
+  stub.getAsteroids = () => {
+    return asteroids;
+  };
+
+  stub.getScore = () => {
+    return score;
+  };
+
+  stub.addScore = (amount) => {
+    return score += amount;
+  };
+
+  stub.turnCounterClockwise = () => {
+    return ship.angle -= config.turnSpeed;
+  };
+
+  stub.turnClockwise = () => {
+    return ship.angle += config.turnSpeed;
+  };
+
+  stub.checkGameOver = () => {
+    return !ship.alive;
+  };
+
   stub.generateOuterAsteroid = () => {
     let side = Math.floor(Math.random() * 4);
     let xLoc, yLoc, xVel, yVel;
@@ -172,6 +204,12 @@ AST.Model = ( function(config, Constructor) {
       }
     }
     return hit;
+  };
+
+  stub.checkBounds = () => {
+    ship.checkBounds();
+    shots.forEach( shot => shot.checkBounds() );
+    asteroids.forEach( asteroid => asteroid.checkBounds() );
   };
 
   return stub;
