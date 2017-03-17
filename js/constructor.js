@@ -3,6 +3,11 @@ var AST = AST || {};
 AST.Constructor = ( function(config) {
   'use strict';
 
+  let _randomAsteroidColor = () => {
+    let index = Math.floor(Math.random() * config.asteroidColors.length);
+    return config.asteroidColors[index];
+  };
+
   function MovingObject(xLoc, yLoc, xVel, yVel) {
     this.xLoc = xLoc;
     this.yLoc = yLoc;
