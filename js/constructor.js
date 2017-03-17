@@ -1,6 +1,7 @@
 var AST = AST || {};
 
-AST.Objects = ( function(config) {
+AST.Constructor = ( function(config) {
+  'use strict';
 
   function MovingObject(xLoc, yLoc, xVel, yVel) {
     this.xLoc = xLoc;

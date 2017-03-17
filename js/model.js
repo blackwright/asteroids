@@ -1,6 +1,6 @@
 var AST = AST || {};
 
-AST.Model = ( function(config) {
+AST.Model = ( function(config, Constructor) {
   'use strict';
 
   let ship, asteroids, shots, score;
@@ -18,4 +18,4 @@ AST.Model = ( function(config) {
     init: init
   };
 
-})(AST.config);
+})(AST.config, AST.Constructor);
