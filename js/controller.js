@@ -9,16 +9,22 @@ AST.Controller = ( function(config, Model, View) {
 
   let init = () => {
     Model.init();
+
     View.init({
       startGame: startGame,
+      resetGame: resetGame,
       fire: fire
     });
+
+    _render();
   };
 
   let _updateScore = () => {
     let score = Model.getScore();
     View.updateScore(score);
   };
+
+  let _accelerate = () => Model.accelerate();
 
   let _turnCounterClockwise = () => Model.turnCounterClockwise();
 
@@ -90,6 +96,12 @@ AST.Controller = ( function(config, Model, View) {
     }, config.timer)
 
     startTime = Date.now();
+  };
+
+  let resetGame = () => {
+    clearInterval(AST.driver);
+    init();
+    _updateScore();
   };
 
   let fire = () => Model.fire();

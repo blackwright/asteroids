@@ -21,7 +21,7 @@ AST.Model = ( function(config, Constructor) {
   };
 
   let _randomPosVel = () => {
-    return Math.floor(Math.random() * config.asterVel + 1);
+    return Math.floor(Math.random() * config.asteroidVel + 1);
   };
 
   let _randomNegVel = () => {
@@ -43,7 +43,7 @@ AST.Model = ( function(config, Constructor) {
 
   let _generateOuterAsteroids = (count) => {
     for (let i = 0; i < count; i++) {
-      generateOuterAsteroid();
+      stub.generateOuterAsteroid();
     }
   };
 
@@ -53,7 +53,7 @@ AST.Model = ( function(config, Constructor) {
     let count = Math.floor(Math.random() * 3 + 1);
     for (let i = 0; i < count; i++) {
       let radiusDivisor = Math.random() * 3 + 1;
-      let radius = this.radius / radiusDivisor;
+      let radius = asteroid.radius / radiusDivisor;
       let xVel, yVel;
       if (asteroid.xVel > 0) {
         xVel = _randomPosVel() + 1;
@@ -65,8 +65,8 @@ AST.Model = ( function(config, Constructor) {
       } else {
         yVel = _randomNegVel() - 1;
       }
-      let asteroid = new Constructor.Asteroid(xLoc, yLoc, xVel, yVel, radius);
-      asteroids.push(asteroid);
+      let newAsteroid = new Constructor.Asteroid(xLoc, yLoc, xVel, yVel, radius);
+      asteroids.push(newAsteroid);
     }
   };
 
@@ -96,6 +96,12 @@ AST.Model = ( function(config, Constructor) {
 
   stub.addScore = (amount) => {
     return score += amount;
+  };
+
+  stub.accelerate = () => {
+    let rads = ship.angle * Math.PI / 180;
+    ship.xVel += 0.5 * Math.cos(rads);
+    ship.yVel += 0.5 * Math.sin(rads);
   };
 
   stub.turnCounterClockwise = () => {
