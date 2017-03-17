@@ -1,6 +1,7 @@
-var ASTEROIDS = ASTEROIDS || {};
+var AST = AST || {};
 
-ASTEROIDS.Controller = ( function(Model, View) {
+AST.Controller = ( function(Model, View) {
+  'use strict';
 
   let init = () => {
     Model.init();
@@ -11,4 +12,4 @@ ASTEROIDS.Controller = ( function(Model, View) {
     init: init
   };
 
-})(ASTEROIDS.Model, ASTEROIDS.View);
+})(AST.Model, AST.View);

@@ -1,6 +1,7 @@
-var ASTEROIDS = ASTEROIDS || {};
+var AST = AST || {};
 
-ASTEROIDS.View = ( function() {
+AST.View = ( function() {
+  'use strict';
 
   let init = () => {
 

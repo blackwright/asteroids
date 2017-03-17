@@ -1,8 +1,8 @@
 'use strict'
 
-var ASTEROIDS = ASTEROIDS || {};
+var AST = AST || {};
 
-ASTEROIDS.config = {
+AST.config = {
   timer: 60,
   roundTime: 2000,
   shipVel: 3,
@@ -15,4 +15,4 @@ ASTEROIDS.config = {
                    '#DADFE1', '#F2F1EF', '#BFBFBF']
 };
 
-ASTEROIDS.keyState = {};
+AST.keyState = {};
