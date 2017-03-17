@@ -5,7 +5,9 @@ AST.Model = ( function(config, Constructor) {
 
   let ship, asteroids, shots, score;
 
-  let init = () => {
+  let stub = {};
+
+  stub.init = () => {
     ship = new Constructor.Ship();
     asteroids = [];
     shots = [];
@@ -45,7 +47,38 @@ AST.Model = ( function(config, Constructor) {
     }
   };
 
-  let generateOuterAsteroid = () => {
+  let _fragment = (asteroid) => {
+    let xLoc = asteroid.xLoc;
+    let yLoc = asteroid.yLoc;
+    let count = Math.floor(Math.random() * 3 + 1);
+    for (let i = 0; i < count; i++) {
+      let radiusDivisor = Math.random() * 3 + 1;
+      let radius = this.radius / radiusDivisor;
+      let xVel, yVel;
+      if (asteroid.xVel > 0) {
+        xVel = _randomPosVel() + 1;
+      } else {
+        xVel = _randomNegVel() - 1;
+      }
+      if (asteroid.yVel > 0) {
+        yVel = _randomPosVel() + 1;
+      } else {
+        yVel = _randomNegVel() - 1;
+      }
+      let asteroid = new Constructor.Asteroid(xLoc, yLoc, xVel, yVel, radius);
+      asteroids.push(asteroid);
+    }
+  };
+
+  let _objCollision = (obj, asteroid) => {
+    let dx = obj.xLoc - asteroid.xLoc;
+    let dy = obj.yLoc - asteroid.yLoc;
+    let distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < asteroid.radius) return true;
+    return false;
+  };
+
+  stub.generateOuterAsteroid = () => {
     let side = Math.floor(Math.random() * 4);
     let xLoc, yLoc, xVel, yVel;
     switch(side) {
@@ -78,13 +111,13 @@ AST.Model = ( function(config, Constructor) {
     asteroids.push(asteroid);
   };
 
-  let accelerate = () => {
+  stub.accelerate = () => {
     let rads = ship.angle * Math.PI / 180;
     ship.xVel += 0.5 * Math.cos(rads);
     ship.yVel += 0.5 * Math.sin(rads);
   };
 
-  let fire = () => {
+  stub.fire = () => {
     let xLoc = ship.xLoc;
     let yLoc = ship.yLoc;
     let angle = ship.angle;
@@ -92,29 +125,55 @@ AST.Model = ( function(config, Constructor) {
     shots.push(shot);
   };
 
-  let ticShip = () => {
+  stub.ticShip = () => {
     ship.tic();
   };
 
-  let ticAsteroids = () => {
+  stub.ticAsteroids = () => {
     asteroids.map( asteroid => asteroid.tic() )
   };
 
-  let ticShots = () => {
+  stub.ticShots = () => {
     shots.map( shot => {
       shot.tic();
       shot.timeLeft--;
     })
   };
 
-  return {
-    init: init,
-    generateOuterAsteroid: generateOuterAsteroid,
-    accelerate: accelerate,
-    fire: fire,
-    ticShip: ticShip,
-    ticAsteroids: ticAsteroids,
-    ticShots: ticShots
+  stub.clearShots = () => {
+    for (let i = shots.length - 1; i >= 0; i--) {
+      if (shots[i].timeLeft === 0) shots.splice(i, 1);
+    }
   };
+
+  stub.clearAsteroids = () => {
+    for (let i = asteroids.length - 1; i >= 0; i--) {
+      if (asteroids[i].radius < 5) asteroids.splice(i, 1);
+    }
+  };
+
+  stub.scanCollisions = () => {
+    let hit = false;
+    for (let a = asteroids.length - 1; a >= 0; a--) {
+      let asteroid = asteroids[a];
+      if (_objCollision(ship, asteroid)) {
+        ship.alive = false;
+        return;
+      }
+      for (let s = shots.length - 1; s >= 0; s--) {
+        let shot = shots[s];
+        if (_objCollision(shot, asteroid)) {
+          _fragment(asteroid);
+          shots.splice(s, 1);
+          asteroids.splice(a, 1);
+          score += Math.ceil(asteroid.radius);
+          hit = true;
+        }
+      }
+    }
+    return hit;
+  };
+
+  return stub;
 
 })(AST.config, AST.Constructor);
