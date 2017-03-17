@@ -39,6 +39,27 @@ AST.Model = ( function(config) {
     };
   }
 
+  function Ship() {
+    let loc = config.boardSize / 2;
+    MovingObject.call(this, loc, loc, 0, 0);
+    this.angle = -90;
+    this.alive = true;
+  }
+
+  Ship.prototype = Object.create(MovingObject.prototype);
+  Ship.constructor = Ship;
+
+  function Shot(xLoc, yLoc, angle) {
+    let rads = angle * Math.PI / 180;
+    let xVel = config.shotVel * Math.cos(rads);
+    let yVel = config.shotVel * Math.sin(rads);
+    MovingObject.call(this, xLoc, yLoc, xVel, yVel);
+    this.timeLeft = 30;
+  }
+
+  Shot.prototype = Object.create(MovingObject.prototype);
+  Shot.constructor = Shot;
+
   function Asteroid(xLoc, yLoc, xVel, yVel, radius) {
     MovingObject.call(this, xLoc, yLoc, xVel, yVel);
     this.radius = radius;
