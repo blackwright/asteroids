@@ -1,15 +1,25 @@
 var AST = AST || {};
 
+
+// driver variable will be used for setInterval
 AST.driver = undefined;
+
+
+// Pass in config object, Model and View modules via dependency injection.
 
 AST.Controller = ( function(config, Model, View) {
   'use strict';
 
-  let startTime;
 
+  // variable used to track how much time has passed since last asteroid spawn
+  let spawnTime;
+
+
+  // initializing all the modules and render on page load
   let init = () => {
     Model.init();
 
+    // pass callbacks into View initialization
     View.init({
       startGame: startGame,
       resetGame: resetGame,
@@ -19,16 +29,21 @@ AST.Controller = ( function(config, Model, View) {
     _render();
   };
 
+
   let _updateScore = () => {
     let score = Model.getScore();
     View.updateScore(score);
   };
 
+
   let _accelerate = () => Model.accelerate();
+
 
   let _turnCounterClockwise = () => Model.turnCounterClockwise();
 
+
   let _turnClockwise = () => Model.turnClockwise();
+
 
   let _gameTurn = () => {
 
@@ -62,9 +77,9 @@ AST.Controller = ( function(config, Model, View) {
     Model.checkBounds();
 
     // add asteroids and score if enough time has passed
-    if (Date.now() - startTime > config.roundTime) {
+    if (Date.now() - spawnTime > config.roundTime) {
       Model.generateOuterAsteroid();
-      startTime = Date.now();
+      spawnTime = Date.now();
       Model.addScore(10);
       _updateScore();
     }
@@ -72,11 +87,13 @@ AST.Controller = ( function(config, Model, View) {
     _render();
   };
 
+
   let _ticAllObjects = () => {
     Model.ticShip();
     Model.ticShots();
     Model.ticAsteroids();
   };
+
 
   let _render = () => {
     let ship = Model.getShip();
@@ -85,18 +102,21 @@ AST.Controller = ( function(config, Model, View) {
     View.render(ship, shots, asteroids);
   };
 
+
   let _gameOver = () => {
     clearInterval(AST.driver);
     View.gameOver();
   };
+
 
   let startGame = () => {
     AST.driver = setInterval( () => {
       _gameTurn();
     }, config.timer)
 
-    startTime = Date.now();
+    spawnTime = Date.now();
   };
+
 
   let resetGame = () => {
     clearInterval(AST.driver);
@@ -104,7 +124,9 @@ AST.Controller = ( function(config, Model, View) {
     _updateScore();
   };
 
+
   let fire = () => Model.fire();
+
 
   return {
     init: init
@@ -113,4 +135,5 @@ AST.Controller = ( function(config, Model, View) {
 })(AST.config, AST.Model, AST.View);
 
 
+// kicks off the whole thing
 $(document).ready( () => AST.Controller.init() );

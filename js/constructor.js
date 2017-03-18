@@ -1,12 +1,22 @@
 var AST = AST || {};
 
+
+// Pass in config object via dependency injection.
+
 AST.Constructor = ( function(config) {
   'use strict';
+
 
   let _randomAsteroidColor = () => {
     let index = Math.floor(Math.random() * config.asteroidColors.length);
     return config.asteroidColors[index];
   };
+
+
+  // All objects inherit from the MovingObject prototype, containing data for
+  // X/Y coordinates, X/Y velocity, a tic function for moving the object over
+  // time, and a checkBounds function for teleporting the object when out of
+  // bounds.
 
   function MovingObject(xLoc, yLoc, xVel, yVel) {
     this.xLoc = xLoc;
@@ -33,6 +43,9 @@ AST.Constructor = ( function(config) {
     };
   }
 
+
+  // Ship constructor adds angle and alive properties to MovingObject.
+
   function Ship() {
     let loc = config.boardSize / 2;
     MovingObject.call(this, loc, loc, 0, 0);
@@ -42,6 +55,10 @@ AST.Constructor = ( function(config) {
 
   Ship.prototype = Object.create(MovingObject.prototype);
   Ship.constructor = Ship;
+
+
+  // Shot constructor has timer counting down to deletion - shots only
+  // exist for a limited amount of time.
 
   function Shot(xLoc, yLoc, angle) {
     let rads = angle * Math.PI / 180;
@@ -54,6 +71,9 @@ AST.Constructor = ( function(config) {
   Shot.prototype = Object.create(MovingObject.prototype);
   Shot.constructor = Shot;
 
+
+  // Asteroid constructor adds radius and color properties.
+
   function Asteroid(xLoc, yLoc, xVel, yVel, radius) {
     MovingObject.call(this, xLoc, yLoc, xVel, yVel);
     this.radius = radius;
@@ -62,6 +82,8 @@ AST.Constructor = ( function(config) {
 
   Asteroid.prototype = Object.create(MovingObject.prototype);
   Asteroid.constructor = Asteroid;
+
+
 
   return {
     Ship: Ship,

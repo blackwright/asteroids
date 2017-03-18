@@ -1,13 +1,21 @@
 var AST = AST || {};
 
+
 AST.View = ( function(config) {
   'use strict';
 
+
   let canvas, ctx, stars;
 
+  // return stub object
   let stub = {};
 
+
+  // Callbacks are passed from controller, then passed into event handlers.
+
   stub.init = (callbacks) => {
+
+    // array of background star locations
     stars = [];
 
     let startGame = callbacks.startGame;
@@ -17,16 +25,23 @@ AST.View = ( function(config) {
     _setUpCanvas(config.boardSize);
     _generateStars();
 
+    // set up event listeners
     _startButtonListener(startGame);
     _resetButtonListener(resetGame);
     _keyListeners(fire);
   };
 
+
   let _$startButton = $('<button>').attr('id', 'start-button')
                                    .text('Start Game');
 
+
   let _$resetButton = $('<button>').attr('id', 'reset-button')
                                    .text('Reset Game');
+
+
+  // startButton and resetButton listeners use 'one' instead of 'on' to
+  // avoid duplication on reset.
 
   let _startButtonListener = (startGame) => {
     $('#control-panel').one('click', '#start-button', () => {
@@ -36,18 +51,23 @@ AST.View = ( function(config) {
     });
   };
 
+
   let _resetButtonListener = (resetGame) => {
     $('#control-panel').one('click', '#reset-button', () => {
       $('#control-panel').empty()
                          .append(_$startButton);
+
+      // remove listeners to avoid duplication
       $(document).off();
       $(window).off();
       resetGame();
     })
   };
 
+
   let _keyListeners = (fire) => {
      window.addEventListener('keydown', (event) => {
+      event.preventDefault();
       AST.keyState[event.keyCode || event.which] = true;
     }, true);
 
@@ -63,12 +83,16 @@ AST.View = ( function(config) {
     });
   };
 
+
   let _setUpCanvas = (boardSize) => {
     canvas = document.getElementById('asteroids-canvas');
     ctx = canvas.getContext('2d');
     canvas.width = boardSize;
     canvas.height = boardSize;
   };
+
+
+  // Each star is an X/Y coordinate pushed into the stars array.
 
   let _generateStars = () => {
     let count = config.boardSize / 10;
@@ -79,16 +103,18 @@ AST.View = ( function(config) {
     }
   };
 
+
   stub.updateScore = (score) => {
     $('#score').text(score);
   };
+
 
   stub.render = (ship, shots, asteroids) => {
 
     // clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // render black
+    // render black background
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -96,7 +122,7 @@ AST.View = ( function(config) {
     ctx.fillStyle = 'white';
     stars.forEach( star => ctx.fillRect(star[0], star[1], 1, 1) );
 
-    // render ship
+    // render ship based on its angle
     ctx.save();
     ctx.translate(ship.xLoc, ship.yLoc);
     ctx.rotate( (ship.angle + 90) * Math.PI / 180);
@@ -123,7 +149,10 @@ AST.View = ( function(config) {
     });
   };
   
+
   stub.gameOver = () => {
+
+    // 'Game Over' text rendered with a black 'shadow' 4px lower
     let x = canvas.width / 2;
     let y = canvas.height / 2 + 4;
     ctx.font = "30px 'Press Start 2P'";
@@ -135,6 +164,7 @@ AST.View = ( function(config) {
     ctx.fillStyle = '#00B16A';
     ctx.fillText('Game Over!', x, y);
   };
+
 
   return stub;
 
