@@ -3,7 +3,7 @@ var AST = AST || {};
 
 // Pass in config and Constructor module.
 
-AST.Model = ( function(config, Constructor) {
+AST.Model = ( (config, Constructor) => {
   'use strict';
 
 
@@ -25,22 +25,22 @@ AST.Model = ( function(config, Constructor) {
   };
 
 
-  let _randomLoc = () => {
+  const _randomLoc = () => {
     return Math.floor(Math.random() * config.boardSize);
   };
 
 
-  let _randomPosVel = () => {
+  const _randomPosVel = () => {
     return Math.floor(Math.random() * config.asteroidVel + 1);
   };
 
 
-  let _randomNegVel = () => {
+  const _randomNegVel = () => {
     return -(_randomPosVel());
   };
 
 
-  let _randomVel = () => {
+  const _randomVel = () => {
     let positive = Math.random() < 0.5;
     if (positive) {
       return _randomPosVel();
@@ -50,14 +50,14 @@ AST.Model = ( function(config, Constructor) {
   };
 
 
-  let _randomRadius = () => {
+  const _randomRadius = () => {
     return Math.floor(Math.random() * config.asteroidRad + 5);
   };
 
 
   // Spawns a specified number of asteroids on the edge of the screen.
 
-  let _generateOuterAsteroids = (count) => {
+  const _generateOuterAsteroids = (count) => {
     for (let i = 0; i < count; i++) {
       stub.generateOuterAsteroid();
     }
@@ -67,7 +67,7 @@ AST.Model = ( function(config, Constructor) {
   // Called when a shot hits an asteroid. Splits a large asteroid into a
   // semi-random number of smaller, faster asteroids.
 
-  let _fragment = (asteroid) => {
+  const _fragment = (asteroid) => {
     let xLoc = asteroid.xLoc;
     let yLoc = asteroid.yLoc;
     let count = Math.floor(Math.random() * 3 + 1);
@@ -91,7 +91,7 @@ AST.Model = ( function(config, Constructor) {
   };
 
 
-  let _objCollision = (obj, asteroid) => {
+  const _objCollision = (obj, asteroid) => {
     let dx = obj.xLoc - asteroid.xLoc;
     let dy = obj.yLoc - asteroid.yLoc;
     let distance = Math.sqrt(dx * dx + dy * dy);

@@ -3,11 +3,11 @@ var AST = AST || {};
 
 // Pass in config object via dependency injection.
 
-AST.Constructor = ( function(config) {
+AST.Constructor = ( (config) => {
   'use strict';
 
 
-  let _randomAsteroidColor = () => {
+  const _randomAsteroidColor = () => {
     let index = Math.floor(Math.random() * config.asteroidColors.length);
     return config.asteroidColors[index];
   };

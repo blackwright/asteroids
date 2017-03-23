@@ -7,7 +7,7 @@ AST.driver = undefined;
 
 // Pass in config object, Model and View modules via dependency injection.
 
-AST.Controller = ( function(config, Model, View) {
+AST.Controller = ( (config, Model, View) => {
   'use strict';
 
 
@@ -16,7 +16,7 @@ AST.Controller = ( function(config, Model, View) {
 
 
   // initializing all the modules and render on page load
-  let init = () => {
+  const init = () => {
     Model.init();
 
     // pass callbacks into View initialization
@@ -30,22 +30,22 @@ AST.Controller = ( function(config, Model, View) {
   };
 
 
-  let _updateScore = () => {
+  const _updateScore = () => {
     let score = Model.getScore();
     View.updateScore(score);
   };
 
 
-  let _accelerate = () => Model.accelerate();
+  const _accelerate = () => Model.accelerate();
 
 
-  let _turnCounterClockwise = () => Model.turnCounterClockwise();
+  const _turnCounterClockwise = () => Model.turnCounterClockwise();
 
 
-  let _turnClockwise = () => Model.turnClockwise();
+  const _turnClockwise = () => Model.turnClockwise();
 
 
-  let _gameTurn = () => {
+  const _gameTurn = () => {
 
     // execute keypresses
     if (AST.keyState[37]) {
@@ -88,14 +88,14 @@ AST.Controller = ( function(config, Model, View) {
   };
 
 
-  let _ticAllObjects = () => {
+  const _ticAllObjects = () => {
     Model.ticShip();
     Model.ticShots();
     Model.ticAsteroids();
   };
 
 
-  let _render = () => {
+  const _render = () => {
     let ship = Model.getShip();
     let shots = Model.getShots();
     let asteroids = Model.getAsteroids();
@@ -103,13 +103,13 @@ AST.Controller = ( function(config, Model, View) {
   };
 
 
-  let _gameOver = () => {
+  const _gameOver = () => {
     clearInterval(AST.driver);
     View.gameOver();
   };
 
 
-  let startGame = () => {
+  const startGame = () => {
     AST.driver = setInterval( () => {
       _gameTurn();
     }, config.timer)
@@ -118,14 +118,14 @@ AST.Controller = ( function(config, Model, View) {
   };
 
 
-  let resetGame = () => {
+  const resetGame = () => {
     clearInterval(AST.driver);
     init();
     _updateScore();
   };
 
 
-  let fire = () => Model.fire();
+  const fire = () => Model.fire();
 
 
   return {

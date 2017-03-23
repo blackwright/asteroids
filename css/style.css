@@ -70,8 +70,25 @@ button:active {
   color: black;
 }
 
-#asteroids-canvas {
-  display: block;
+#canvas-container {
+  position: relative;
   margin: 50px auto;
+  width: 500px;
+  height: 500px;
+}
+
+#asteroids-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
   border: 5px solid black;
+  z-index: 1;
+}
+
+#stars-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 5px solid black;
+  z-index: 0;
 }
